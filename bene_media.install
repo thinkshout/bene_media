@@ -19,13 +19,11 @@ function bene_media_install() {
   // Disable default media view, cause we have our own.
   View::load('media')->setStatus(FALSE)->save();
 
-  \Drupal::service('module_installer')
-    ->install([
-      'bene_media_document',
-      'bene_media_instagram',
-      'bene_media_twitter',
-      'bene_media_video',
-    ]);
+//  \Drupal::service('module_installer')
+//    ->install([
+//      'bene_media_instagram',
+//      'bene_media_twitter',
+//    ]);
 
   // Set permissions.
   $staff_permissions = [

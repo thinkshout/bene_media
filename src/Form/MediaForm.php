@@ -5,8 +5,8 @@ namespace Drupal\bene_media\Form;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\bene_media\MediaHelper as Helper;
-use Drupal\media_entity\MediaForm as BaseMediaForm;
-use Drupal\media_entity\MediaInterface;
+use Drupal\media\MediaForm as BaseMediaForm;
+use Drupal\media\MediaInterface;
 
 /**
  * Adds dynamic preview support to the media entity form.
@@ -21,7 +21,7 @@ class MediaForm extends BaseMediaForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    /** @var \Drupal\media_entity\MediaInterface $entity */
+    /** @var \Drupal\media\MediaInterface $entity */
     $entity = $this->getEntity();
 
     $field = Helper::getSourceField($entity);
@@ -84,14 +84,14 @@ class MediaForm extends BaseMediaForm {
   /**
    * Indicates if the media entity's type plugin supports dynamic previews.
    *
-   * @param \Drupal\media_entity\MediaInterface $entity
+   * @param \Drupal\media\MediaInterface $entity
    *   The media entity.
    *
    * @return bool
    *   TRUE if dynamic previews are supported, FALSE otherwise.
    */
   public static function isPreviewable(MediaInterface $entity) {
-    $plugin_definition = $entity->getType()->getPluginDefinition();
+    $plugin_definition = $entity->getSource()->getPluginDefinition();
 
     return isset($plugin_definition['preview']);
   }
@@ -99,7 +99,7 @@ class MediaForm extends BaseMediaForm {
   /**
    * Returns the media entity's source field item list.
    *
-   * @param \Drupal\media_entity\MediaInterface $entity
+   * @param \Drupal\media\MediaInterface $entity
    *   The media entity.
    *
    * @return \Drupal\Core\Field\FieldItemListInterface|null
@@ -107,7 +107,7 @@ class MediaForm extends BaseMediaForm {
    *   plugin does not define a source field.
    */
   public static function getSourceField(MediaInterface $entity) {
-    $type_configuration = $entity->getType()->getConfiguration();
+    $type_configuration = $entity->getSource()->getConfiguration();
 
     return isset($type_configuration['source_field'])
       ? $entity->get($type_configuration['source_field'])

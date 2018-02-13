@@ -20,9 +20,9 @@ use Drupal\bene_media\Plugin\Field\FieldWidget\EntityReferenceBrowserWidget;
 use Drupal\bene_media\MediaHelper;
 use Drupal\bene_media\OverrideHelper as Override;
 use Drupal\bene_media\Form\MediaForm;
-use Drupal\media_entity\Entity\MediaBundle;
-use Drupal\media_entity\MediaInterface;
-use Drupal\bene_media\Plugin\MediaEntity\Type\Image;
+use Drupal\media\Entity\MediaType;
+use Drupal\media\MediaInterface;
+use Drupal\media\Plugin\media\Source\Image;
 
 /**
  * Implements hook_field_widget_info_alter().
@@ -46,9 +46,9 @@ function bene_media_element_info_alter(array &$info) {
 function bene_media_entity_extra_field_info() {
   $extra_fields = [];
 
-  /** @var \Drupal\media_entity\MediaBundleInterface $media_type */
-  foreach (MediaBundle::loadMultiple() as $id => $media_type) {
-    $plugin_definition = $media_type->getType()->getPluginDefinition();
+  /** @var \Drupal\media\MediaTypeInterface $media_type */
+  foreach (MediaType::loadMultiple() as $id => $media_type) {
+    $plugin_definition = $media_type->getSource()->getPluginDefinition();
 
     if (isset($plugin_definition['preview'])) {
       $extra_fields['media'][$id]['form']['preview'] = [
@@ -79,16 +79,16 @@ function bene_media_inline_entity_form_entity_form_alter(array &$entity_form) {
  *
  * @param \Drupal\file\FileInterface $file
  *   The file to validate.
- * @param string[] $bundles
- *   (optional) A set of media bundle IDs which might match the input. If
- *   omitted, all bundles to which the user has create access will be checked.
+ * @param string[] $types
+ *   (optional) A set of media type IDs which might match the input. If
+ *   omitted, all types to which the user has create access will be checked.
  *
  * @return string[]
  *   An array of errors. If empty, the file passed validation.
  */
-function bene_media_validate_upload(FileInterface $file, array $bundles = []) {
+function bene_media_validate_upload(FileInterface $file, array $types = []) {
   try {
-    $entity = \Drupal::service('bene.media_helper')->createFromInput($file, $bundles);
+    $entity = \Drupal::service('bene.media_helper')->createFromInput($file, $types);
   }
   catch (IndeterminateBundleException $e) {
     return [];
@@ -231,8 +231,8 @@ function bene_media_entity_type_alter(array &$entity_types) {
   Override::entityForm($entity_types['media'], MediaForm::class);
   Override::entityForm($entity_types['media'], MediaForm::class, 'edit');
 
-  // Use our extended storage handler for media bundles.
-  Override::entityHandler($entity_types['media_bundle'], 'storage', BundleEntityStorage::class);
+  // Use our extended storage handler for media types.
+  Override::entityHandler($entity_types['media_type'], 'storage', BundleEntityStorage::class);
 }
 
 /**
@@ -390,16 +390,16 @@ function bene_media_entity_form_display_presave(EntityFormDisplayInterface $disp
 }
 
 /**
- * Implements hook_media_entity_type_info_alter().
+ * Implements hook_entity_bundle_info_alter().
  */
-function bene_media_media_entity_type_info_alter(array &$types) {
-  $types['image']['input_match']['field_types'] = ['image'];
+function bene_media_bundle_info_alter(array &$types) {
+  $types['media']['image']['input_match']['field_types'] = ['image'];
   Override::pluginClass($types['image'], Image::class);
 
   // When a media item that uses the Image plugin is embedded in a text editor,
   // prefer the media_image display plugin.
   // @see \Drupal\bene_media\Form\EntityEmbedDialog::buildEmbedStep()
-  $types['image']['entity_embed_display'] = 'media_image';
+  $types['media']['image']['entity_embed_display'] = 'media_image';
 }
 
 /**

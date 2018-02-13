@@ -3,9 +3,8 @@ status: true
 dependencies:
   config:
     - core.entity_form_mode.media.media_browser
-    - field.field.media.image.image
     - image.style.medium
-    - media_entity.bundle.image
+    - media.type.image
   module:
     - bene_media
 id: media.image.media_browser
