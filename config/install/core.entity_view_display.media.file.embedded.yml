@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.embedded
+    - field.field.media.file.field_media_file
+    - media.type.file
+  module:
+    - file
+id: media.file.embedded
+targetEntityType: media
+bundle: file
+mode: embedded
+content:
+  field_document:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: file_default
+    region: content
+hidden:
+  created: true
+  name: true
+  thumbnail: true
+  uid: true
