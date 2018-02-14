@@ -1,9 +1,10 @@
-name: Media
+name: Bene Media
 core: 8.x
 type: module
-description: 'Media support for Bene'
+description: 'Media support for Bene.'
 package: Bene
 dependencies:
+  - drupal:system (>=8.5)
   - ctools:ctools
   - drupal:ckeditor
   - drupal:editor
