@@ -4,7 +4,7 @@ dependencies:
   config:
     - core.entity_form_mode.media.media_browser
     - field.field.media.file.field_media_file
-    - media.type.type
+    - media.type.file
 id: media.file.media_browser
 targetEntityType: media
 bundle: file
