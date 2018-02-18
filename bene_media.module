@@ -87,6 +87,7 @@ function bene_media_inline_entity_form_entity_form_alter(array &$entity_form) {
  *   An array of errors. If empty, the file passed validation.
  */
 function bene_media_validate_upload(FileInterface $file, array $types = []) {
+  $here = 1;
   try {
     $entity = \Drupal::service('bene.media_helper')->createFromInput($file, $types);
   }

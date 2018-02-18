@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.media.thumbnail
+    - field.field.media.video.field_media_video_embed_field
     - image.style.medium
     - media.type.video
   module:
@@ -15,12 +16,12 @@ content:
   thumbnail:
     type: image
     weight: 0
+    region: content
     label: hidden
     settings:
       image_style: medium
       image_link: ''
     third_party_settings: {  }
-    region: content
 hidden:
   created: true
   field_media_video_embed_field: true

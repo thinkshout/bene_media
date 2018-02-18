@@ -6,6 +6,7 @@
  */
 
 use Drupal\views\Entity\View;
+use Drupal\media\Entity\MediaType;
 
 /**
  * Implements hook_install().
@@ -18,6 +19,13 @@ function bene_media_install() {
 
   // Disable default media view, cause we have our own.
   View::load('media')->setStatus(FALSE)->save();
+
+  // Also have to whack the default Video and Audio types, which assume we're
+  // going to host the files ourselves.
+  foreach (['video', 'audio'] as $type) {
+    $type = MediaType::load($type);
+    $type->delete();
+  }
 
 //  \Drupal::service('module_installer')
 //    ->install([
