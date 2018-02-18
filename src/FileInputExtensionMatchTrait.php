@@ -4,6 +4,7 @@ namespace Drupal\bene_media;
 
 use Drupal\file\FileInterface;
 use Drupal\media\MediaTypeInterface;
+use Drupal\media\MediaSourceInterface;
 
 /**
  * Implements InputMatchInterface for media types that use a file field.
@@ -28,7 +29,7 @@ trait FileInputExtensionMatchTrait {
       $value = $this->entityTypeManager()->getStorage('file')->load($value);
     }
 
-    if ($value instanceof FileInterface && $this instanceof SourceFieldInterface && ($field = $this->getSourceFieldDefinition($type))) {
+    if ($value instanceof FileInterface && $this instanceof MediaSourceInterface && ($field = $this->getSourceFieldDefinition($type))) {
       $extension = pathinfo($value->getFilename(), PATHINFO_EXTENSION);
       $extension = strtolower($extension);
 

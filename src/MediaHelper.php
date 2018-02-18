@@ -7,6 +7,7 @@ use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\bene_media\Exception\IndeterminateBundleException;
 use Drupal\media\MediaInterface;
+use Drupal\media\MediaSourceInterface;
 
 /**
  * Provides helper methods for dealing with media entities.
@@ -56,7 +57,7 @@ class MediaHelper {
     foreach ($types as $type) {
       $type_plugin = $type->getSource();
 
-      if ($type_plugin instanceof SourceFieldInterface) {
+      if ($type_plugin instanceof MediaSourceInterface) {
         $field = $type_plugin->getSourceFieldDefinition($type);
 
         // If the field is a FileItem or any of its descendants, we can consider
@@ -230,7 +231,7 @@ class MediaHelper {
   public static function getSourceField(MediaInterface $entity) {
     $type_plugin = $entity->getSource();
 
-    if ($type_plugin instanceof SourceFieldInterface) {
+    if ($type_plugin instanceof MediaSourceInterface) {
       $field = $type_plugin->getSourceFieldDefinition($entity->bundle->entity);
 
       return $field

@@ -4,6 +4,7 @@ dependencies:
   config:
     - core.entity_form_mode.media.media_browser
     - field.field.media.file.field_media_file
+    - field.field.media.file.media_tags
     - media.type.file
 id: media.file.media_browser
 targetEntityType: media
@@ -20,5 +21,8 @@ content:
     region: content
 hidden:
   created: true
-  field_document: true
+  field_media_file: true
+  media_tags: true
+  path: true
+  status: true
   uid: true
