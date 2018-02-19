@@ -25,16 +25,3 @@ function bene_media_video_requirements($phase) {
 
   return $requirements;
 }
-
-function bene_media_video_install() {
-//  //Get your custom config
-//  $cfg = \Drupal::configFactory()->getEditable('media.type.bene_video');
-//  //Get config name to override
-//  $target = $cfg->get('target');
-//  //Get Config object
-//  $settings = \Drupal::configFactory()->getEditable($target);
-//  //Override all data that can be overridden
-//  $settings->setData($cfg->get())->save();
-//  //If you won't store any previous state, get rid of your custom config
-//  $cfg->delete();
-}
