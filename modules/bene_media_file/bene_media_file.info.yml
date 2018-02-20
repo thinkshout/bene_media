@@ -6,3 +6,4 @@ description: 'File support for Bene Media.'
 dependencies:
   - file
   - bene_media
+  - config_rewrite
