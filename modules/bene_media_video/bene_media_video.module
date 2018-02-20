@@ -26,12 +26,3 @@ function bene_media_video_media_source_info_alter(&$sources) {
 
   Override::pluginClass($sources['video_embed_field'], Video::class);
 }
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function bene_media_video_media_presave(MediaInterface $entity) {
-  if ($entity->bundle() == 'video') {
-    $entity->automaticallySetThumbnail();
-  }
-}

@@ -5,5 +5,4 @@ package: Bene
 description: 'Video support for Bene Media.'
 dependencies:
   - drupal:bene_media
-  - drupal:config_rewrite
-  - drupal:video_embed_media (2.x)
+  - drupal:video_embed_media
