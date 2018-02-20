@@ -3,10 +3,9 @@ status: true
 dependencies:
   config:
     - core.entity_form_mode.media.media_browser
-    - image.style.medium
+    - field.field.media.image.field_media_image
+    - field.field.media.image.media_tags
     - media.type.image
-  module:
-    - bene_media
 id: media.image.media_browser
 targetEntityType: media
 bundle: image
@@ -20,9 +19,18 @@ content:
       progress_indicator: throbber
     third_party_settings: {  }
     region: content
+  media_tags:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   name:
     type: string_textfield
-    weight: 3
+    weight: 0
     settings:
       size: 60
       placeholder: ''
@@ -30,4 +38,7 @@ content:
     region: content
 hidden:
   created: true
+  field_media_image: true
+  path: true
+  status: true
   uid: true

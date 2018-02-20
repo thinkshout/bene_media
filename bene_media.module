@@ -17,12 +17,12 @@ use Drupal\image\Plugin\ImageEffect\ResizeImageEffect;
 use Drupal\bene_media\BundleEntityStorage;
 use Drupal\bene_media\Exception\IndeterminateBundleException;
 use Drupal\bene_media\Plugin\Field\FieldWidget\EntityReferenceBrowserWidget;
+use Drupal\bene_media\Plugin\media\Source\Image;
 use Drupal\bene_media\MediaHelper;
 use Drupal\bene_media\OverrideHelper as Override;
 use Drupal\bene_media\Form\MediaForm;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\MediaInterface;
-use Drupal\bene_media\Plugin\media\Source\Image;
 
 /**
  * Implements hook_field_widget_info_alter().
@@ -87,7 +87,6 @@ function bene_media_inline_entity_form_entity_form_alter(array &$entity_form) {
  *   An array of errors. If empty, the file passed validation.
  */
 function bene_media_validate_upload(FileInterface $file, array $types = []) {
-  $here = 1;
   try {
     $entity = \Drupal::service('bene.media_helper')->createFromInput($file, $types);
   }
@@ -404,7 +403,6 @@ function bene_media_media_source_info_alter(&$sources) {
   // @see \Drupal\bene_media\Form\EntityEmbedDialog::buildEmbedStep()
   $sources['image']['entity_embed_display'] = 'media_image';
 }
-
 
 /**
  * Implements hook_menu_local_actions_alter().

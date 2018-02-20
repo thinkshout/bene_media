@@ -6,6 +6,7 @@ package: Bene
 dependencies:
   - drupal:system (>=8.5)
   - ctools:ctools
+  - config_rewrite:config_rewrite
   - drupal:ckeditor
   - drupal:editor
   - drupal:field
