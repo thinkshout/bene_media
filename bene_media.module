@@ -391,17 +391,20 @@ function bene_media_entity_form_display_presave(EntityFormDisplayInterface $disp
 }
 
 /**
- * Implements hook_entity_bundle_info_alter().
+ * Implements hook_media_source_info_alter().
+ *
+ * @param $sources
  */
-function bene_media_bundle_info_alter(array &$types) {
-  $types['media']['image']['input_match']['field_types'] = ['image'];
-  Override::pluginClass($types['image'], Image::class);
+function bene_media_media_source_info_alter(&$sources) {
+  $sources['media']['image']['input_match']['field_types'] = ['image'];
+  Override::pluginClass($sources['image'], Image::class);
 
   // When a media item that uses the Image plugin is embedded in a text editor,
   // prefer the media_image display plugin.
   // @see \Drupal\bene_media\Form\EntityEmbedDialog::buildEmbedStep()
-  $types['media']['image']['entity_embed_display'] = 'media_image';
+  $sources['media']['image']['entity_embed_display'] = 'media_image';
 }
+
 
 /**
  * Implements hook_menu_local_actions_alter().
