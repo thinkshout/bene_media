@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\bene_media_file\Plugin\media\Source;
+namespace Drupal\bene_media\Plugin\media\Source;
 
 use Drupal\bene_media\FileInputExtensionMatchTrait;
 use Drupal\bene_media\InputMatchInterface;

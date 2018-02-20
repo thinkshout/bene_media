@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.embedded_half
+    - field.field.media.video.field_media_video_embed_field
+    - image.style.max_325x325
+    - media.type.bene_media_video
+  module:
+    - image
+id: media.video.embedded_half
+targetEntityType: media
+bundle: video
+mode: embedded_half
+content:
+  thumbnail:
+    type: image
+    weight: 0
+    label: hidden
+    settings:
+      image_style: max_325x325
+      image_link: ''
+    region: content
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_video_embed_field: true
+  name: true
+  uid: true

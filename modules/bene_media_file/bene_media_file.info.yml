@@ -4,6 +4,6 @@ type: module
 package: Bene
 description: 'File support for Bene Media.'
 dependencies:
-  - file
-  - bene_media
-  - config_rewrite
+  - bene_media:bene_media
+  - config_rewrite:config_rewrite
+  - drupal:file
