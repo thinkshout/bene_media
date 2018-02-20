@@ -5,7 +5,6 @@
  * Support for videos as media entities in Bene.
  */
 
-use Drupal\media\MediaInterface;
 use Drupal\bene_media\OverrideHelper as Override;
 use Drupal\bene_media_video\Plugin\media\Source\Video;
 
