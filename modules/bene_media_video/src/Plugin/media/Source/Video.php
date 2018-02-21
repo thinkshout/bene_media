@@ -4,7 +4,7 @@ namespace Drupal\bene_media_video\Plugin\media\Source;
 
 use Drupal\bene_media\InputMatchInterface;
 use Drupal\media\MediaTypeInterface;
-use Drupal\video_embed_media\Plugin\Media\Source\VideoEmbedField;
+use Drupal\video_embed_media\Plugin\media\Source\VideoEmbedField;
 
 /**
  * Input-matching version of the VideoEmbedField media type.
