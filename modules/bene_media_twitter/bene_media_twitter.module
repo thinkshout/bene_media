@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Support for twitter posts as media entities in Bene.
+ */
+
+use Drupal\bene_media\OverrideHelper as Override;
+use Drupal\bene_media_twitter\Plugin\media\Source\Twitter;
+
+/**
+ * Implements hook_media_source_info_alter().
+ *
+ * @param $sources
+ */
+function bene_media_twitter_media_source_info_alter(array &$sources) {
+  $sources['twitter']['input_match'] = [
+    'constraint' => 'TweetEmbedCode',
+    'field_types' => [
+      'string',
+      'string_long',
+    ],
+  ];
+  $sources['twitter']['preview'] = TRUE;
+
+  Override::pluginClass($sources['twitter'], Twitter::class);
+}
