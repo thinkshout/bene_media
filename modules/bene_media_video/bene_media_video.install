@@ -10,16 +10,18 @@ function bene_media_video_requirements($phase) {
   $requirements = ['bene_media_video'];
 
   if ($phase == 'install') {
-    $query = \Drupal::entityQuery('media');
-    $query->condition('bundle', 'video');
-    $existing_videos = $query->execute();
+    if (\Drupal::entityTypeManager()->hasDefinition('media')) {
+      $query = \Drupal::entityQuery('media');
+      $query->condition('bundle', 'video');
+      $existing_videos = $query->execute();
 
-    if ($existing_videos) {
-      $requirements['bene_media_video'] = [
-        'title' => t('Existing videos'),
-        'description' => t('Bene Media Video cannot be installed when core-media videos with file sources exist. Please delete those videos and install Bene Media Video again.'),
-        'severity' => REQUIREMENT_ERROR,
-      ];
+      if ($existing_videos) {
+        $requirements['bene_media_video'] = [
+          'title'       => t('Existing videos'),
+          'description' => t('Bene Media Video cannot be installed when core-media videos with file sources exist. Please delete those videos and install Bene Media Video again.'),
+          'severity'    => REQUIREMENT_ERROR,
+        ];
+      }
     }
   }
 

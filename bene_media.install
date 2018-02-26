@@ -18,20 +18,19 @@ function bene_media_install() {
   }
 
   // Disable default media view, cause we have our own.
-  View::load('media')->setStatus(FALSE)->save();
+  $media_view = View::load('media');
+  if ($media_view) {
+    $media_view->setStatus(FALSE)->save();
+  }
 
   // Also have to whack the default Video and Audio types, which assume we're
   // going to host the files ourselves.
   foreach (['video', 'audio'] as $type) {
     $type = MediaType::load($type);
-    $type->delete();
+    if ($type) {
+      $type->delete();
+    }
   }
-
-//  \Drupal::service('module_installer')
-//    ->install([
-//      'bene_media_instagram',
-//      'bene_media_twitter',
-//    ]);
 
   // Set permissions.
   $staff_permissions = [
