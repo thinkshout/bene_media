@@ -11,7 +11,7 @@ targetEntityType: media
 bundle: image
 mode: media_browser
 content:
-  image:
+  field_media_image:
     type: image_immutable
     weight: 0
     settings:
@@ -38,7 +38,6 @@ content:
     region: content
 hidden:
   created: true
-  field_media_image: true
   path: true
   status: true
   uid: true
