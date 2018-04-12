@@ -7,7 +7,7 @@
  *  The phase in which requirements are checked: install, update, or runtime.
  */
 function bene_media_video_requirements($phase) {
-  $requirements = ['bene_media_video'];
+  $requirements = [];
 
   if ($phase == 'install') {
     $query = \Drupal::entityQuery('media');
