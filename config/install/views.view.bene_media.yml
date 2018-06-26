@@ -1243,7 +1243,7 @@ display:
             operation: view
             multiple: 1
             access: false
-            bundles: null
+            bundles: {  }
           glossary: false
           limit: 0
           case: none
