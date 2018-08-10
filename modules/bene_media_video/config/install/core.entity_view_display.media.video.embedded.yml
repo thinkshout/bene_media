@@ -5,7 +5,7 @@ dependencies:
     - core.entity_view_mode.media.embedded
     - field.field.media.video.field_media_video_embed_field
     - image.style.max_650x650
-    - media.type.bene_media_video
+    - media.type.video
   module:
     - image
 id: media.video.embedded
