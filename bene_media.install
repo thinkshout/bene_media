@@ -17,6 +17,19 @@ function bene_media_install() {
     return;
   }
 
+  // Also have to whack the default Video and Audio types, which assume we're
+  // going to host the files ourselves.
+  foreach (['video', 'audio'] as $type) {
+    $type = MediaType::load($type);
+    $type->delete();
+  }
+
+//  \Drupal::service('module_installer')
+//    ->install([
+//      'bene_media_instagram',
+//      'bene_media_twitter',
+//    ]);
+
   // Set permissions.
   $staff_permissions = [
     'access media_browser entity browser pages' => 1,

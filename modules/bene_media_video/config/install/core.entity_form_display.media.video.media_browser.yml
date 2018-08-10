@@ -5,7 +5,7 @@ dependencies:
     - core.entity_form_mode.media.media_browser
     - field.field.media.video.field_media_video_embed_field
     - field.field.media.video.media_tags
-    - media.type.video
+    - media.type.bene_media_video
 id: media.video.media_browser
 targetEntityType: media
 bundle: video
