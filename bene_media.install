@@ -17,9 +17,6 @@ function bene_media_install() {
     return;
   }
 
-  // Disable default media view, cause we have our own.
-  View::load('media')->setStatus(FALSE)->save();
-
   // Also have to whack the default Video and Audio types, which assume we're
   // going to host the files ourselves.
   foreach (['video', 'audio'] as $type) {
