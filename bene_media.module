@@ -226,10 +226,13 @@ function bene_media_entity_type_alter(array &$entity_types) {
   // Media items are a common reference target, and that's that...
   $entity_types['media']->set('common_reference_target', TRUE);
 
-  // Use our specialized entity form for adding and editing media assets in
-  // order to support dynamic preview generation.
-  Override::entityForm($entity_types['media'], MediaForm::class);
-  Override::entityForm($entity_types['media'], MediaForm::class, 'edit');
+  $moduleHandler = \Drupal::service('module_handler');
+  if ($moduleHandler->moduleExists('media')) {
+    // Use our specialized entity form for adding and editing media assets in
+    // order to support dynamic preview generation.
+    Override::entityForm($entity_types['media'], MediaForm::class);
+    Override::entityForm($entity_types['media'], MediaForm::class, 'edit');
+  }
 
   // Use our extended storage handler for media types.
   Override::entityHandler($entity_types['media_type'], 'storage', BundleEntityStorage::class);
