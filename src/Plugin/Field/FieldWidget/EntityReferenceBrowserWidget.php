@@ -33,6 +33,7 @@ class EntityReferenceBrowserWidget extends BaseEntityReferenceBrowserWidget {
         '#attributes' => [
           'open' => TRUE,
         ],
+        '#summary_attributes' => [],
         '#title' => $this->formatPlural($cardinality, 'Current selection', 'Current selections'),
       ],
     ];
