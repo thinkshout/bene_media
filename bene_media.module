@@ -21,8 +21,6 @@ use Drupal\bene_media\Plugin\media\Source\Image;
 use Drupal\bene_media\MediaHelper;
 use Drupal\bene_media\OverrideHelper as Override;
 use Drupal\bene_media\Form\MediaForm;
-use Drupal\media\Entity\MediaType;
-use Drupal\media\MediaInterface;
 
 /**
  * Implements hook_field_widget_info_alter().
@@ -46,18 +44,20 @@ function bene_media_element_info_alter(array &$info) {
 function bene_media_entity_extra_field_info() {
   $extra_fields = [];
 
-  /** @var \Drupal\media\MediaTypeInterface $media_type */
-  foreach (MediaType::loadMultiple() as $id => $media_type) {
-    $plugin_definition = $media_type->getSource()->getPluginDefinition();
+  if (class_exists( 'Drupal\media\Entity\MediaType')) {
+    /** @var \Drupal\media\MediaTypeInterface $media_type */
+    foreach (MediaType::loadMultiple() as $id => $media_type) {
+      $plugin_definition = $media_type->getSource()->getPluginDefinition();
 
-    if (isset($plugin_definition['preview'])) {
-      $extra_fields['media'][$id]['form']['preview'] = [
-        'label' => t('Preview'),
-        'description' => t('A live preview of the @media_type.', [
-          '@media_type' => $media_type->label(),
-        ]),
-        'weight' => 0,
-      ];
+      if (isset($plugin_definition['preview'])) {
+        $extra_fields['media'][$id]['form']['preview'] = [
+          'label' => t('Preview'),
+          'description' => t('A live preview of the @media_type.', [
+            '@media_type' => $media_type->label(),
+          ]),
+          'weight' => 0,
+        ];
+      }
     }
   }
   return $extra_fields;
@@ -69,8 +69,11 @@ function bene_media_entity_extra_field_info() {
 function bene_media_inline_entity_form_entity_form_alter(array &$entity_form) {
   $entity = $entity_form['#entity'];
 
-  if ($entity instanceof MediaInterface && MediaHelper::isPreviewable($entity)) {
-    $entity_form['preview'] = MediaHelper::getSourceField($entity)->view('default');
+  if (class_exists('Drupal\media\MediaInterface')) {
+    if ($entity instanceof MediaInterface && MediaHelper::isPreviewable($entity)) {
+      $entity_form['preview'] = MediaHelper::getSourceField($entity)
+        ->view('default');
+    }
   }
 }
 

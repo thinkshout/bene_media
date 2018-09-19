@@ -5,9 +5,6 @@
  * Contains install and update routines for Bene Media.
  */
 
-use Drupal\views\Entity\View;
-use Drupal\media\Entity\MediaType;
-
 /**
  * Implements hook_install().
  */
