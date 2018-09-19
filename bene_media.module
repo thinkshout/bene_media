@@ -46,7 +46,7 @@ function bene_media_entity_extra_field_info() {
 
   if (class_exists( 'Drupal\media\Entity\MediaType')) {
     /** @var \Drupal\media\MediaTypeInterface $media_type */
-    foreach (MediaType::loadMultiple() as $id => $media_type) {
+    foreach (\Drupal\media\Entity\MediaType::loadMultiple() as $id => $media_type) {
       $plugin_definition = $media_type->getSource()->getPluginDefinition();
 
       if (isset($plugin_definition['preview'])) {
@@ -70,7 +70,7 @@ function bene_media_inline_entity_form_entity_form_alter(array &$entity_form) {
   $entity = $entity_form['#entity'];
 
   if (class_exists('Drupal\media\MediaInterface')) {
-    if ($entity instanceof MediaInterface && MediaHelper::isPreviewable($entity)) {
+    if ($entity instanceof \Drupal\media\MediaInterface && MediaHelper::isPreviewable($entity)) {
       $entity_form['preview'] = MediaHelper::getSourceField($entity)
         ->view('default');
     }
