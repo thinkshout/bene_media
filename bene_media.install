@@ -29,3 +29,15 @@ function bene_media_install() {
 
   user_role_change_permissions('staff', $staff_permissions);
 }
+
+/**
+ * Uninstall obsolete modules.
+ */
+function bene_media_update_8501() {
+  $to_remove = ['bene_media_document', 'media_entity_document', 'media_entity_image'];
+  foreach ($to_remove as $modulename) {
+    if (\Drupal::moduleHandler()->moduleExists($modulename)) {
+      \Drupal::service('module_installer')->uninstall([$modulename]);
+    }
+  }
+}
