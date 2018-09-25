@@ -1,9 +1,7 @@
 name: 'Media Document'
 core: 8.x
 type: module
-description: 'Locally hosted document support for Bene Media.'
+description: 'Deprecated: Locally hosted document support for Bene Media. Uninstall this module, it will disappear in future iterations.'
 package: Bene
 dependencies:
-  - file
   - bene_media
-  - media_entity_document
