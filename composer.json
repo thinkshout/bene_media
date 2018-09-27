@@ -40,7 +40,9 @@
             },
             "drupal/entity_embed": {
                 "2832504 - Send the CKEditor instance ID to the embed.preview route":
-                "https://www.drupal.org/files/issues/2832504-2.patch"
+                "https://www.drupal.org/files/issues/2832504-2.patch",
+                "2511404 - Image entities/fields embedded using Entity Embed cannot be linked in CKEditor":
+                "https://www.drupal.org/files/issues/2018-09-17/entity-embed-link-2511404-68.patch"
             },
             "drupal/embed": {
                 "2824110 - Allow site-builders to use a non-managed file as button icon":
