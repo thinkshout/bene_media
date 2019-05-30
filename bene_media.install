@@ -5,6 +5,11 @@
  * Contains install and update routines for Bene Media.
  */
 
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\media\Entity\MediaType;
+use Drupal\media\Entity\Media;
+
 /**
  * Implements hook_install().
  */
@@ -28,4 +33,136 @@ function bene_media_install() {
   ];
 
   user_role_change_permissions('staff', $staff_permissions);
+}
+
+/**
+ * Creates a new source field for Media images if one does not exist.
+ */
+function bene_media_update_8100() {
+  $type = MediaType::load('image');
+  if (!$type) {
+    return;
+  }
+  if (!FieldStorageConfig::loadByName('media', 'field_media_image')) {
+    FieldStorageConfig::create([
+      'id' => 'media.field_media_image',
+      'field_name' => 'field_media_image',
+      'entity_type' => 'media',
+      'type' => 'image',
+      'settings' => [
+        'default_image' => [
+          'uuid' => null,
+          'alt' => '',
+          'title' => '',
+          'width' => null,
+          'height' => null,
+        ],
+        'target_type' => 'file',
+        'display_field' => false,
+        'display_default' => false,
+        'uri_scheme' => 'public',
+      ],
+      'module' => 'image',
+      'locked' => false,
+      'cardinality' => 1,
+      'translatable' => true,
+      'indexes' => [],
+      'persist_with_no_fields' => false,
+      'custom_storage' => false,
+    ])->save();
+  }
+  if (!FieldConfig::loadByName('media', 'image', 'field_media_image')) {
+    FieldConfig::create([
+      'id' => 'media.image.field_media_image',
+      'field_name' => 'field_media_image',
+      'entity_type' => 'media',
+      'bundle' => 'image',
+      'label' => 'Image',
+      'description' => '',
+      'required' => true,
+      'translatable' => true,
+      'default_value' => [],
+      'default_value_callback' => '',
+      'settings' => [
+        'alt_field' => true,
+        'alt_field_required' => true,
+        'title_field' => false,
+        'title_field_required' => false,
+        'max_resolution' => '',
+        'min_resolution' => '',
+        'default_image' => [
+          'uuid' => null,
+          'alt' => '',
+          'title' => '',
+          'width' => null,
+          'height' => null,
+        ],
+        'file_directory' => '[date:custom:Y]-[date:custom:m]',
+        'file_extensions' => 'png gif jpg jpeg',
+        'max_filesize' => '',
+        'handler' => 'default:file',
+        'handler_settings' => [],
+      ],
+      'field_type' => 'image',
+    ])->save();
+  }
+  \Drupal::configFactory()->getEditable('media.type.image')->set('source_configuration.source_field', 'field_media_image')->save(TRUE);
+  $media_displays = \Drupal::configFactory()->listAll('core.entity_form_display.media.image');
+  $media_displays = array_merge($media_displays, \Drupal::configFactory()->listAll('core.entity_view_display.media.image'));
+  foreach ($media_displays as $config_id) {
+    $display = \Drupal::configFactory()->getEditable($config_id);
+    if ($settings = $display->get('content.image')) {
+      $display->clear('content.image');
+      $display->set('content.field_media_image', $settings);
+      $dependencies = $display->get('dependencies.config');
+      if ($id = array_search('field.field.media.image.image', $dependencies)) {
+        unset($dependencies[$id]);
+        $display->set('dependencies.config', array_values($dependencies));
+      }
+      $display->save(TRUE);
+    }
+  }
+}
+
+/**
+ * Updates all Media image entities to use new source field.
+ */
+function bene_media_update_8200(&$sandbox) {
+  if (!isset($sandbox['media_ids'])) {
+    $sandbox['media_ids'] = array_values(\Drupal::entityTypeManager()->getStorage('media')
+      ->getQuery()
+      ->condition('bundle', 'image')
+      ->exists('image')
+      ->notExists('field_media_image')
+      ->execute());
+    $sandbox['max'] = count($sandbox['media_ids']);
+    $sandbox['progress'] = 0;
+  }
+  if (empty($sandbox['media_ids'])) {
+    return;
+  }
+  for ($i = 0; $i < 10; ++$i) {
+    if (!empty($sandbox['media_ids'])) {
+      $id = array_pop($sandbox['media_ids']);
+      $media = Media::load($id);
+      $media->set('field_media_image', $media->get('image')->getValue());
+      $media->save();
+      ++$sandbox['progress'];
+    }
+  }
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : $sandbox['progress'] / $sandbox['max'];
+}
+
+/**
+ * Deletes the previous media image source field.
+ */
+function bene_media_update_8300() {
+  if ($field_config = FieldConfig::loadByName('media', 'image', 'image')) {
+    $field_config->delete();
+  }
+  if ($field_storage = FieldStorageConfig::loadByName('media', 'image')) {
+    if (!$field_storage->getBundles()) {
+      $field_storage->delete();
+    }
+  }
 }
