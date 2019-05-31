@@ -117,8 +117,11 @@ function bene_media_update_8100() {
       $dependencies = $display->get('dependencies.config');
       if ($id = array_search('field.field.media.image.image', $dependencies)) {
         unset($dependencies[$id]);
-        $display->set('dependencies.config', array_values($dependencies));
       }
+      if (!in_array('field.field.media.image.field_media_image', $dependencies, TRUE)) {
+        $dependencies[] = 'field.field.media.image.field_media_image';
+      }
+      $display->set('dependencies.config', array_values($dependencies));
       $display->save(TRUE);
     }
   }
@@ -165,4 +168,12 @@ function bene_media_update_8300() {
       $field_storage->delete();
     }
   }
+}
+
+/**
+ * Adds media tags to the audio and image types.
+ */
+function bene_media_update_8400() {
+  _bene_media_update_add_tags('audio');
+  _bene_media_update_add_tags('image');
 }

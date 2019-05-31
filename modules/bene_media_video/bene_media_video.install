@@ -25,3 +25,10 @@ function bene_media_video_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+ * Adds media tags to the video type.
+ */
+function bene_media_video_update_8100() {
+  _bene_media_update_add_tags('video');
+}

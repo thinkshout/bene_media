@@ -19,10 +19,18 @@ content:
       placeholder: ''
     third_party_settings: {  }
     region: content
+  media_tags:
+    type: entity_reference_autocomplete_tags
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
 hidden:
   created: true
   field_media_file: true
-  media_tags: true
   path: true
   status: true
   uid: true
