@@ -9,6 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\Entity\Media;
+use Drupal\Core\Serialization\Yaml;
 
 /**
  * Implements hook_install().
@@ -199,5 +200,19 @@ function bene_media_update_8500() {
   // The media_entity_actions module is no longer required.
   if (\Drupal::moduleHandler()->moduleExists('media_entity_actions')) {
     \Drupal::service('module_installer')->uninstall(['media_entity_actions']);
+  }
+}
+
+/**
+ * Re-syncs the Media admin view configuration.
+ */
+function bene_media_update_8600() {
+  $config = \Drupal::configFactory()->getEditable('views.view.bene_media');
+  if (!empty($config)) {
+    $yaml = file_get_contents(__DIR__ . '/config/install/views.view.bene_media.yml');
+    if ($data = Yaml::decode($yaml)) {
+      $config->setData($data);
+      $config->save(TRUE);
+    }
   }
 }
