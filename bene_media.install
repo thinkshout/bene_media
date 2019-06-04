@@ -211,7 +211,7 @@ function bene_media_update_8600() {
   if (!empty($config)) {
     $yaml = file_get_contents(__DIR__ . '/config/install/views.view.bene_media.yml');
     if ($data = Yaml::decode($yaml)) {
-      $config->setData($data);
+      $config->set('display', $data['display']);
       $config->save(TRUE);
     }
   }
