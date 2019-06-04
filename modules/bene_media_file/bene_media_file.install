@@ -8,6 +8,6 @@
 /**
  * Adds media tags to the file type.
  */
-function bene_media_file_update_8100() {
+function bene_media_file_update_8200() {
   _bene_media_update_add_tags('file');
 }

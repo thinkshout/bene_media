@@ -39,7 +39,7 @@ function bene_media_install() {
 /**
  * Creates a new source field for Media images if one does not exist.
  */
-function bene_media_update_8100() {
+function bene_media_update_8200() {
   $type = MediaType::load('image');
   if (!$type) {
     return;
@@ -131,7 +131,7 @@ function bene_media_update_8100() {
 /**
  * Updates all Media image entities to use new source field.
  */
-function bene_media_update_8200(&$sandbox) {
+function bene_media_update_8201(&$sandbox) {
   if (!isset($sandbox['media_ids'])) {
     $sandbox['media_ids'] = array_values(\Drupal::entityTypeManager()->getStorage('media')
       ->getQuery()
@@ -160,7 +160,7 @@ function bene_media_update_8200(&$sandbox) {
 /**
  * Deletes the previous media image source field.
  */
-function bene_media_update_8300() {
+function bene_media_update_8202() {
   if ($field_config = FieldConfig::loadByName('media', 'image', 'image')) {
     $field_config->delete();
   }
@@ -174,7 +174,7 @@ function bene_media_update_8300() {
 /**
  * Adds media tags to the audio and image types.
  */
-function bene_media_update_8400() {
+function bene_media_update_8203() {
   _bene_media_update_add_tags('audio');
   _bene_media_update_add_tags('image');
 }
@@ -183,7 +183,7 @@ function bene_media_update_8400() {
 /**
  * Updates outdated media action plugins.
  */
-function bene_media_update_8500() {
+function bene_media_update_8204() {
   $actions = [
     'system.action.media_publish_action' => 'entity:publish_action:media',
     'system.action.media_save_action' => 'entity:save_action:media',
@@ -206,7 +206,7 @@ function bene_media_update_8500() {
 /**
  * Re-syncs the Media admin view configuration.
  */
-function bene_media_update_8600() {
+function bene_media_update_8205() {
   $config = \Drupal::configFactory()->getEditable('views.view.bene_media');
   if (!empty($config)) {
     $yaml = file_get_contents(__DIR__ . '/config/install/views.view.bene_media.yml');
@@ -220,7 +220,7 @@ function bene_media_update_8600() {
 /**
  * Moves the media browser view mode for images to use focal point.
  */
-function bene_media_update_8700() {
+function bene_media_update_8206() {
   $config = \Drupal::configFactory()->getEditable('core.entity_form_display.media.image.media_browser');
   if (!empty($config)) {
     $config->clear('hidden.field_media_image');

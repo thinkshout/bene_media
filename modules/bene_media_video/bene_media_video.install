@@ -29,14 +29,14 @@ function bene_media_video_requirements($phase) {
 /**
  * Adds media tags to the video type.
  */
-function bene_media_video_update_8100() {
+function bene_media_video_update_8200() {
   _bene_media_update_add_tags('video');
 }
 
 /**
  * Updates the video media "embedded" view mode.
  */
-function bene_media_video_update_8200() {
+function bene_media_video_update_8201() {
   if ($config = \Drupal::configFactory()->getEditable('core.entity_view_display.media.video.embedded')) {
     $config->clear('hidden.field_media_video_embed_field');
     $config->set('content', [

@@ -13,12 +13,12 @@ function bene_media_instagram_install() {
     return;
   }
 
-  bene_media_instagram_update_8100();
+  bene_media_instagram_update_8200();
 }
 
 /**
  * Adds media tags to the instagram type.
  */
-function bene_media_instagram_update_8100() {
+function bene_media_instagram_update_8200() {
   _bene_media_update_add_tags('instagram');
 }

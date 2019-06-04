@@ -13,12 +13,12 @@ function bene_media_document_install() {
     return;
   }
 
-  bene_media_document_update_8100();
+  bene_media_document_update_8200();
 }
 
 /**
  * Adds media tags to the document type.
  */
-function bene_media_document_update_8100() {
+function bene_media_document_update_8200() {
   _bene_media_update_add_tags('document');
 }
