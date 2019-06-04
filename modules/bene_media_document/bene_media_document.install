@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update routines.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function bene_media_document_install() {
+  if (\Drupal::isConfigSyncing()) {
+    return;
+  }
+
+  bene_media_document_update_8100();
+}
+
+/**
+ * Adds media tags to the document type.
+ */
+function bene_media_document_update_8100() {
+  _bene_media_update_add_tags('document');
+}

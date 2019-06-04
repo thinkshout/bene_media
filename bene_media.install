@@ -9,6 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\Entity\Media;
+use Drupal\Core\Serialization\Yaml;
 
 /**
  * Implements hook_install().
@@ -117,8 +118,11 @@ function bene_media_update_8100() {
       $dependencies = $display->get('dependencies.config');
       if ($id = array_search('field.field.media.image.image', $dependencies)) {
         unset($dependencies[$id]);
-        $display->set('dependencies.config', array_values($dependencies));
       }
+      if (!in_array('field.field.media.image.field_media_image', $dependencies, TRUE)) {
+        $dependencies[] = 'field.field.media.image.field_media_image';
+      }
+      $display->set('dependencies.config', array_values($dependencies));
       $display->save(TRUE);
     }
   }
@@ -164,5 +168,74 @@ function bene_media_update_8300() {
     if (!$field_storage->getBundles()) {
       $field_storage->delete();
     }
+  }
+}
+
+/**
+ * Adds media tags to the audio and image types.
+ */
+function bene_media_update_8400() {
+  _bene_media_update_add_tags('audio');
+  _bene_media_update_add_tags('image');
+}
+
+
+/**
+ * Updates outdated media action plugins.
+ */
+function bene_media_update_8500() {
+  $actions = [
+    'system.action.media_publish_action' => 'entity:publish_action:media',
+    'system.action.media_save_action' => 'entity:save_action:media',
+    'system.action.media_unpublish_action' => 'entity:unpublish_action:media',
+    'system.action.media_delete_action' => 'entity:delete_action:media',
+  ];
+  foreach ($actions as $config_name => $new_plugin_id) {
+    $config = \Drupal::configFactory()->getEditable($config_name);
+    if ($config->get('plugin')) {
+      $config->set('plugin', $new_plugin_id);
+      $config->save(TRUE);
+    }
+  }
+  // The media_entity_actions module is no longer required.
+  if (\Drupal::moduleHandler()->moduleExists('media_entity_actions')) {
+    \Drupal::service('module_installer')->uninstall(['media_entity_actions']);
+  }
+}
+
+/**
+ * Re-syncs the Media admin view configuration.
+ */
+function bene_media_update_8600() {
+  $config = \Drupal::configFactory()->getEditable('views.view.bene_media');
+  if (!empty($config)) {
+    $yaml = file_get_contents(__DIR__ . '/config/install/views.view.bene_media.yml');
+    if ($data = Yaml::decode($yaml)) {
+      $config->setData($data);
+      $config->save(TRUE);
+    }
+  }
+}
+
+/**
+ * Moves the media browser view mode for images to use focal point.
+ */
+function bene_media_update_8700() {
+  $config = \Drupal::configFactory()->getEditable('core.entity_form_display.media.image.media_browser');
+  if (!empty($config)) {
+    $config->clear('hidden.field_media_image');
+    $config->set('content.field_media_image', [
+      'type' => 'image_focal_point',
+      'weight' => 0,
+      'settings' => [
+        'preview_image_style' => 'medium',
+        'progress_indicator' => 'throbber',
+        'preview_link' => TRUE,
+        'offsets' => '50,50',
+      ],
+      'third_party_settings' => [],
+      'region' => 'content',
+    ]);
+    $config->save(TRUE);
   }
 }
