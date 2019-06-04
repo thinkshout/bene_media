@@ -177,3 +177,27 @@ function bene_media_update_8400() {
   _bene_media_update_add_tags('audio');
   _bene_media_update_add_tags('image');
 }
+
+
+/**
+ * Updates outdated media action plugins.
+ */
+function bene_media_update_8500() {
+  $actions = [
+    'system.action.media_publish_action' => 'entity:publish_action:media',
+    'system.action.media_save_action' => 'entity:save_action:media',
+    'system.action.media_unpublish_action' => 'entity:unpublish_action:media',
+    'system.action.media_delete_action' => 'entity:delete_action:media',
+  ];
+  foreach ($actions as $config_name => $new_plugin_id) {
+    $config = \Drupal::configFactory()->getEditable($config_name);
+    if ($config->get('plugin')) {
+      $config->set('plugin', $new_plugin_id);
+      $config->save(TRUE);
+    }
+  }
+  // The media_entity_actions module is no longer required.
+  if (\Drupal::moduleHandler()->moduleExists('media_entity_actions')) {
+    \Drupal::service('module_installer')->uninstall(['media_entity_actions']);
+  }
+}
