@@ -216,3 +216,26 @@ function bene_media_update_8600() {
     }
   }
 }
+
+/**
+ * Moves the media browser view mode for images to use focal point.
+ */
+function bene_media_update_8700() {
+  $config = \Drupal::configFactory()->getEditable('core.entity_form_display.media.image.media_browser');
+  if (!empty($config)) {
+    $config->clear('hidden.field_media_image');
+    $config->set('content.field_media_image', [
+      'type' => 'image_focal_point',
+      'weight' => 0,
+      'settings' => [
+        'preview_image_style' => 'medium',
+        'progress_indicator' => 'throbber',
+        'preview_link' => TRUE,
+        'offsets' => '50,50',
+      ],
+      'third_party_settings' => [],
+      'region' => 'content',
+    ]);
+    $config->save(TRUE);
+  }
+}
