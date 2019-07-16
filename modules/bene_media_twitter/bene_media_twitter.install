@@ -20,5 +20,6 @@ function bene_media_twitter_install() {
  * Adds media tags to the tweet type.
  */
 function bene_media_twitter_update_8200() {
+  module_load_include('inc', 'bene_media', 'bene_media.install');
   _bene_media_update_add_tags('tweet');
 }
