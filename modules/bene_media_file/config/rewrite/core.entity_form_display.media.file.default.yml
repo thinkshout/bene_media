@@ -21,7 +21,7 @@ content:
     type: file_generic
     region: content
   media_tags:
-    type: entity_reference_autocomplete
+    type: entity_reference_autocomplete_tags
     weight: 2
     region: content
     settings:

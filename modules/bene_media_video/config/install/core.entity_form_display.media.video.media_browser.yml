@@ -12,8 +12,8 @@ bundle: video
 mode: media_browser
 content:
   media_tags:
-    type: entity_reference_autocomplete
-    weight: 1
+    type: entity_reference_autocomplete_tags
+    weight: 2
     region: content
     settings:
       match_operator: CONTAINS

@@ -25,3 +25,36 @@ function bene_media_video_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+ * Adds media tags to the video type.
+ */
+function bene_media_video_update_8200() {
+  module_load_include('inc', 'bene_media', 'bene_media.install');
+  _bene_media_update_add_tags('video');
+}
+
+/**
+ * Updates the video media "embedded" view mode.
+ */
+function bene_media_video_update_8201() {
+  if ($config = \Drupal::configFactory()->getEditable('core.entity_view_display.media.video.embedded')) {
+    $config->clear('hidden.field_media_video_embed_field');
+    $config->set('content', [
+      'field_media_video_embed_field' => [
+        'type' => 'video_embed_field_video',
+        'weight' => 2,
+        'label' => 'hidden',
+        'settings' => [
+          'responsive' => TRUE,
+          'width' => 854,
+          'height' => 480,
+          'autoplay' => TRUE,
+        ],
+        'third_party_settings' => [],
+        'region' => 'content',
+      ],
+    ]);
+    $config->save(TRUE);
+  }
+}
