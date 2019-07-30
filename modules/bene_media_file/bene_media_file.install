@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update routines.
+ */
+
+/**
+ * Adds media tags to the file type.
+ */
+function bene_media_file_update_8200() {
+  module_load_include('inc', 'bene_media', 'bene_media.install');
+  _bene_media_update_add_tags('file');
+}

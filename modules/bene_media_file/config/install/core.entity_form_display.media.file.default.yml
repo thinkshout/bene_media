@@ -48,4 +48,13 @@ content:
       placeholder: ''
     region: content
     third_party_settings: {  }
+  media_tags:
+    type: entity_reference_autocomplete_tags
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
 hidden: {  }

@@ -17,7 +17,10 @@ use Drupal\image\Plugin\ImageEffect\ResizeImageEffect;
 use Drupal\bene_media\BundleEntityStorage;
 use Drupal\bene_media\Exception\IndeterminateBundleException;
 use Drupal\bene_media\Plugin\Field\FieldWidget\EntityReferenceBrowserWidget;
+use Drupal\bene_media\Plugin\media\Source\AudioFile;
+use Drupal\bene_media\Plugin\media\Source\File;
 use Drupal\bene_media\Plugin\media\Source\Image;
+use Drupal\bene_media\Plugin\media\Source\VideoFile;
 use Drupal\bene_media\MediaHelper;
 use Drupal\bene_media\OverrideHelper as Override;
 use Drupal\bene_media\Form\MediaForm;
@@ -408,6 +411,11 @@ function bene_media_media_source_info_alter(&$sources) {
   // prefer the media_image display plugin.
   // @see \Drupal\bene_media\Form\EntityEmbedDialog::buildEmbedStep()
   $sources['image']['entity_embed_display'] = 'media_image';
+
+  // Overrides for core media types.
+  Override::pluginClass($sources['audio_file'], AudioFile::class);
+  Override::pluginClass($sources['video_file'], VideoFile::class);
+  Override::pluginClass($sources['file'], File::class);
 }
 
 /**
