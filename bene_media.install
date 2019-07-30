@@ -254,3 +254,25 @@ function bene_media_update_8207() {
     }
   }
 }
+
+/**
+ * Adds the "Form preview" view mode for media entities.
+ */
+function bene_media_update_8208() {
+  if (empty(\Drupal::config('core.entity_view_mode.media.form_preview')->getRawData())) {
+    $yaml = file_get_contents(__DIR__ . '/config/install/core.entity_view_mode.media.form_preview.yml');
+    if ($data = Yaml::decode($yaml)) {
+      \Drupal::configFactory()->getEditable('core.entity_view_mode.media.form_preview')
+        ->setData($data)
+        ->save(TRUE);
+    }
+  }
+  if (empty(\Drupal::config('core.entity_view_display.media.image.form_preview')->getRawData())) {
+    $yaml = file_get_contents(__DIR__ . '/config/install/core.entity_view_display.media.image.form_preview.yml');
+    if ($data = Yaml::decode($yaml)) {
+      \Drupal::configFactory()->getEditable('core.entity_view_display.media.image.form_preview')
+        ->setData($data)
+        ->save(TRUE);
+    }
+  }
+}
