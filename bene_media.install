@@ -276,3 +276,38 @@ function bene_media_update_8208() {
     }
   }
 }
+
+/**
+ * Adds the "Original" view mode for media entities.
+ */
+function bene_media_update_8209() {
+  $config = [
+    'core.entity_view_mode.media.original',
+    'responsive_image.styles.original',
+    'core.entity_view_display.media.image.original',
+  ];
+  foreach ($config as $name) {
+    if (empty(\Drupal::config($name)->getRawData())) {
+      $yaml = file_get_contents(__DIR__ . '/config/install/' . $name . '.yml');
+      if ($data = Yaml::decode($yaml)) {
+        \Drupal::configFactory()->getEditable($name)
+          ->setData($data)
+          ->save(TRUE);
+      }
+    }
+  }
+  $config = \Drupal::configFactory()->getEditable('embed.button.media_browser');
+  if (!empty($config->getRawData())) {
+    $display_plugins = $config->get('type_settings.display_plugins');
+    if (!in_array('view_mode:media.original', $display_plugins, TRUE)) {
+      $display_plugins[] = 'view_mode:media.original';
+      $config->set('type_settings.display_plugins', $display_plugins);
+    }
+    $dependencies = $config->get('dependencies.config');
+    if (!in_array('core.entity_view_mode.media.original', $dependencies, TRUE)) {
+      $dependencies[] = 'core.entity_view_mode.media.original';
+      $config->set('dependencies.config', $dependencies);
+    }
+    $config->save(TRUE);
+  }
+}
