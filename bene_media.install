@@ -240,3 +240,17 @@ function bene_media_update_8206() {
     $config->save(TRUE);
   }
 }
+
+/**
+ * Adds the media name to the bene media browser.
+ */
+function bene_media_update_8207() {
+  $config = \Drupal::configFactory()->getEditable('views.view.bene_media');
+  if (!empty($config)) {
+    $yaml = file_get_contents(__DIR__ . '/config/install/views.view.bene_media.yml');
+    if ($data = Yaml::decode($yaml)) {
+      $config->set('display', $data['display']);
+      $config->save(TRUE);
+    }
+  }
+}
