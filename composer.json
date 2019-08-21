@@ -20,7 +20,7 @@
     "require": {
         "drupal/focal_point": "^1.0@beta",
         "drupal/config_rewrite": "^1.1",
-        "drupal/crop": "^1.5",
+        "drupal/crop": "^2.0-rc1",
         "drupal/ctools": "^3.0",
         "drupal/entity_browser": "^1.4",
         "drupal/entity_embed": "^1.0@beta",
@@ -28,7 +28,12 @@
         "drupal/picture_background_formatter": "1.x-dev",
         "drupal/video_embed_field": "^2.0@alpha",
         "drupal/views_infinite_scroll": "^1.5",
-        "drupal/media_entity_actions": "^1.0@alpha"
+        "drupal/media_entity": "^2.0-beta2",
+        "drupal/media_entity_actions": "^1.0@alpha",
+        "drupal/media_entity_document": "^1.1",
+        "drupal/media_entity_image": "^1.2",
+        "drupal/media_entity_instagram": "^2.0",
+        "drupal/media_entity_twitter": "^2.0"
     },
     "extra": {
         "patches": {

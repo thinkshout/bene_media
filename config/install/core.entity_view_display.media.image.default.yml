@@ -2,27 +2,27 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.media.thumbnail
+    - field.field.media.image.field_media_image
     - image.style.medium
     - media.type.image
   module:
     - image
-id: media.image.thumbnail
+id: media.image.default
 targetEntityType: media
 bundle: image
-mode: thumbnail
+mode: default
 content:
   field_media_image:
-    type: image
-    weight: 0
-    label: hidden
+    label: visually_hidden
     settings:
-      image_style: medium
-      image_link: ''
+      image_style: ''
+      image_link: file
     third_party_settings: {  }
+    type: image
+    weight: 1
     region: content
 hidden:
   created: true
-  name: true
   thumbnail: true
   uid: true
+  name: true

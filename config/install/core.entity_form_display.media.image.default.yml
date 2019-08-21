@@ -1,17 +1,17 @@
-uuid: null
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.media.video.field_media_video_embed_field
-    - field.field.media.video.media_tags
-    - media.type.video
+    - field.field.media.image.field_media_image
+    - field.field.media.image.media_tags
+    - image.style.thumbnail
+    - media.type.image
   module:
+    - focal_point
     - path
-    - video_embed_field
-id: media.video.default
+id: media.image.default
 targetEntityType: media
-bundle: video
+bundle: image
 mode: default
 content:
   created:
@@ -20,21 +20,25 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_media_video_embed_field:
-    type: video_embed_field_textfield
+  field_media_image:
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+      preview_link: true
+      offsets: '50,50'
+    third_party_settings: {  }
+    type: image_focal_point
+    weight: 1
+    region: content
+  media_tags:
+    type: entity_reference_autocomplete_tags
     weight: 2
     region: content
-    settings: {  }
-    third_party_settings: {  }
-  media_tags:
-    weight: 26
     settings:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   name:
     type: string_textfield
     weight: 0
@@ -46,11 +50,6 @@ content:
   path:
     type: path
     weight: 5
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  preview:
-    weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }

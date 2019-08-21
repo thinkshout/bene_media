@@ -11,17 +11,19 @@ targetEntityType: media
 bundle: image
 mode: media_browser
 content:
-  image:
-    type: image_immutable
+  field_media_image:
+    type: image_focal_point
     weight: 0
     settings:
       preview_image_style: medium
       progress_indicator: throbber
+      preview_link: true
+      offsets: '50,50'
     third_party_settings: {  }
     region: content
   media_tags:
-    type: entity_reference_autocomplete
-    weight: 1
+    type: entity_reference_autocomplete_tags
+    weight: 2
     region: content
     settings:
       match_operator: CONTAINS
@@ -38,7 +40,6 @@ content:
     region: content
 hidden:
   created: true
-  field_media_image: true
   path: true
   status: true
   uid: true

@@ -5,7 +5,7 @@ dependencies:
     - core.entity_view_mode.media.embedded
     - field.field.media.video.field_media_video_embed_field
     - image.style.max_650x650
-    - media.type.bene_media_video
+    - media.type.video
   module:
     - image
 id: media.video.embedded
@@ -13,17 +13,20 @@ targetEntityType: media
 bundle: video
 mode: embedded
 content:
-  thumbnail:
-    type: image
-    weight: 0
+  field_media_video_embed_field:
+    type: video_embed_field_video
+    weight: 2
     label: hidden
     settings:
-      image_style: max_650x650
-      image_link: ''
-    region: content
+      responsive: true
+      width: 854
+      height: 480
+      autoplay: true
     third_party_settings: {  }
+    region: content
 hidden:
   created: true
-  field_media_video_embed_field: true
+  media_tags: true
   name: true
+  thumbnail: true
   uid: true

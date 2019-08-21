@@ -5,8 +5,11 @@
  * Contains install and update routines for Bene Media.
  */
 
-use Drupal\views\Entity\View;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\media\Entity\MediaType;
+use Drupal\media\Entity\Media;
+use Drupal\Core\Serialization\Yaml;
 
 /**
  * Implements hook_install().
@@ -16,19 +19,6 @@ function bene_media_install() {
   if (\Drupal::isConfigSyncing()) {
     return;
   }
-
-  // Also have to whack the default Video and Audio types, which assume we're
-  // going to host the files ourselves.
-  foreach (['video', 'audio'] as $type) {
-    $type = MediaType::load($type);
-    $type->delete();
-  }
-
-//  \Drupal::service('module_installer')
-//    ->install([
-//      'bene_media_instagram',
-//      'bene_media_twitter',
-//    ]);
 
   // Set permissions.
   $staff_permissions = [
@@ -44,4 +34,280 @@ function bene_media_install() {
   ];
 
   user_role_change_permissions('staff', $staff_permissions);
+}
+
+/**
+ * Creates a new source field for Media images if one does not exist.
+ */
+function bene_media_update_8200() {
+  $type = MediaType::load('image');
+  if (!$type) {
+    return;
+  }
+  if (!FieldStorageConfig::loadByName('media', 'field_media_image')) {
+    FieldStorageConfig::create([
+      'id' => 'media.field_media_image',
+      'field_name' => 'field_media_image',
+      'entity_type' => 'media',
+      'type' => 'image',
+      'settings' => [
+        'default_image' => [
+          'uuid' => null,
+          'alt' => '',
+          'title' => '',
+          'width' => null,
+          'height' => null,
+        ],
+        'target_type' => 'file',
+        'display_field' => false,
+        'display_default' => false,
+        'uri_scheme' => 'public',
+      ],
+      'module' => 'image',
+      'locked' => false,
+      'cardinality' => 1,
+      'translatable' => true,
+      'indexes' => [],
+      'persist_with_no_fields' => false,
+      'custom_storage' => false,
+    ])->save();
+  }
+  if (!FieldConfig::loadByName('media', 'image', 'field_media_image')) {
+    FieldConfig::create([
+      'id' => 'media.image.field_media_image',
+      'field_name' => 'field_media_image',
+      'entity_type' => 'media',
+      'bundle' => 'image',
+      'label' => 'Image',
+      'description' => '',
+      'required' => true,
+      'translatable' => true,
+      'default_value' => [],
+      'default_value_callback' => '',
+      'settings' => [
+        'alt_field' => true,
+        'alt_field_required' => true,
+        'title_field' => false,
+        'title_field_required' => false,
+        'max_resolution' => '',
+        'min_resolution' => '',
+        'default_image' => [
+          'uuid' => null,
+          'alt' => '',
+          'title' => '',
+          'width' => null,
+          'height' => null,
+        ],
+        'file_directory' => '[date:custom:Y]-[date:custom:m]',
+        'file_extensions' => 'png gif jpg jpeg',
+        'max_filesize' => '',
+        'handler' => 'default:file',
+        'handler_settings' => [],
+      ],
+      'field_type' => 'image',
+    ])->save();
+  }
+  \Drupal::configFactory()->getEditable('media.type.image')->set('source_configuration.source_field', 'field_media_image')->save(TRUE);
+  $media_displays = \Drupal::configFactory()->listAll('core.entity_form_display.media.image');
+  $media_displays = array_merge($media_displays, \Drupal::configFactory()->listAll('core.entity_view_display.media.image'));
+  foreach ($media_displays as $config_id) {
+    $display = \Drupal::configFactory()->getEditable($config_id);
+    if ($settings = $display->get('content.image')) {
+      $display->clear('content.image');
+      $display->set('content.field_media_image', $settings);
+      $dependencies = $display->get('dependencies.config');
+      if ($id = array_search('field.field.media.image.image', $dependencies)) {
+        unset($dependencies[$id]);
+      }
+      if (!in_array('field.field.media.image.field_media_image', $dependencies, TRUE)) {
+        $dependencies[] = 'field.field.media.image.field_media_image';
+      }
+      $display->set('dependencies.config', array_values($dependencies));
+      $display->save(TRUE);
+    }
+  }
+}
+
+/**
+ * Updates all Media image entities to use new source field.
+ */
+function bene_media_update_8201(&$sandbox) {
+  if (!isset($sandbox['media_ids'])) {
+    $sandbox['media_ids'] = array_values(\Drupal::entityTypeManager()->getStorage('media')
+      ->getQuery()
+      ->condition('bundle', 'image')
+      ->exists('image')
+      ->notExists('field_media_image')
+      ->execute());
+    $sandbox['max'] = count($sandbox['media_ids']);
+    $sandbox['progress'] = 0;
+  }
+  if (empty($sandbox['media_ids'])) {
+    return;
+  }
+  for ($i = 0; $i < 10; ++$i) {
+    if (!empty($sandbox['media_ids'])) {
+      $id = array_pop($sandbox['media_ids']);
+      $media = Media::load($id);
+      $media->set('field_media_image', $media->get('image')->getValue());
+      $media->save();
+      ++$sandbox['progress'];
+    }
+  }
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : $sandbox['progress'] / $sandbox['max'];
+}
+
+/**
+ * Deletes the previous media image source field.
+ */
+function bene_media_update_8202() {
+  if ($field_config = FieldConfig::loadByName('media', 'image', 'image')) {
+    $field_config->delete();
+  }
+  if ($field_storage = FieldStorageConfig::loadByName('media', 'image')) {
+    if (!$field_storage->getBundles()) {
+      $field_storage->delete();
+    }
+  }
+}
+
+/**
+ * Adds media tags to the audio and image types.
+ */
+function bene_media_update_8203() {
+  module_load_include('inc', 'bene_media', 'bene_media.install');
+  _bene_media_update_add_tags('audio');
+  _bene_media_update_add_tags('image');
+}
+
+
+/**
+ * Updates outdated media action plugins.
+ */
+function bene_media_update_8204() {
+  $actions = [
+    'system.action.media_publish_action' => 'entity:publish_action:media',
+    'system.action.media_save_action' => 'entity:save_action:media',
+    'system.action.media_unpublish_action' => 'entity:unpublish_action:media',
+    'system.action.media_delete_action' => 'entity:delete_action:media',
+  ];
+  foreach ($actions as $config_name => $new_plugin_id) {
+    $config = \Drupal::configFactory()->getEditable($config_name);
+    if ($config->get('plugin')) {
+      $config->set('plugin', $new_plugin_id);
+      $config->save(TRUE);
+    }
+  }
+  // The media_entity_actions module is no longer required.
+  if (\Drupal::moduleHandler()->moduleExists('media_entity_actions')) {
+    \Drupal::service('module_installer')->uninstall(['media_entity_actions']);
+  }
+}
+
+/**
+ * Re-syncs the Media admin view configuration.
+ */
+function bene_media_update_8205() {
+  $config = \Drupal::configFactory()->getEditable('views.view.bene_media');
+  if (!empty($config)) {
+    $yaml = file_get_contents(__DIR__ . '/config/install/views.view.bene_media.yml');
+    if ($data = Yaml::decode($yaml)) {
+      $config->set('display', $data['display']);
+      $config->save(TRUE);
+    }
+  }
+}
+
+/**
+ * Moves the media browser view mode for images to use focal point.
+ */
+function bene_media_update_8206() {
+  $config = \Drupal::configFactory()->getEditable('core.entity_form_display.media.image.media_browser');
+  if (!empty($config)) {
+    $config->clear('hidden.field_media_image');
+    $config->set('content.field_media_image', [
+      'type' => 'image_focal_point',
+      'weight' => 0,
+      'settings' => [
+        'preview_image_style' => 'medium',
+        'progress_indicator' => 'throbber',
+        'preview_link' => TRUE,
+        'offsets' => '50,50',
+      ],
+      'third_party_settings' => [],
+      'region' => 'content',
+    ]);
+    $config->save(TRUE);
+  }
+}
+
+/**
+ * Adds the media name to the bene media browser.
+ */
+function bene_media_update_8207() {
+  $config = \Drupal::configFactory()->getEditable('views.view.bene_media');
+  if (!empty($config)) {
+    $yaml = file_get_contents(__DIR__ . '/config/install/views.view.bene_media.yml');
+    if ($data = Yaml::decode($yaml)) {
+      $config->set('display', $data['display']);
+      $config->save(TRUE);
+    }
+  }
+}
+
+/**
+ * Adds the "Form preview" view mode for media entities.
+ */
+function bene_media_update_8208() {
+  if (empty(\Drupal::config('core.entity_view_mode.media.form_preview')->getRawData())) {
+    $yaml = file_get_contents(__DIR__ . '/config/install/core.entity_view_mode.media.form_preview.yml');
+    if ($data = Yaml::decode($yaml)) {
+      \Drupal::configFactory()->getEditable('core.entity_view_mode.media.form_preview')
+        ->setData($data)
+        ->save(TRUE);
+    }
+  }
+  if (empty(\Drupal::config('core.entity_view_display.media.image.form_preview')->getRawData())) {
+    $yaml = file_get_contents(__DIR__ . '/config/install/core.entity_view_display.media.image.form_preview.yml');
+    if ($data = Yaml::decode($yaml)) {
+      \Drupal::configFactory()->getEditable('core.entity_view_display.media.image.form_preview')
+        ->setData($data)
+        ->save(TRUE);
+    }
+  }
+}
+
+/**
+ * Adds the "Original" view mode for media entities.
+ */
+function bene_media_update_8209() {
+  $config = [
+    'core.entity_view_mode.media.original',
+    'responsive_image.styles.original',
+    'core.entity_view_display.media.image.original',
+  ];
+  foreach ($config as $name) {
+    if (empty(\Drupal::config($name)->getRawData())) {
+      $yaml = file_get_contents(__DIR__ . '/config/install/' . $name . '.yml');
+      if ($data = Yaml::decode($yaml)) {
+        \Drupal::configFactory()->getEditable($name)
+          ->setData($data)
+          ->save(TRUE);
+      }
+    }
+  }
+  $config = \Drupal::configFactory()->getEditable('embed.button.media_browser');
+  if (!empty($config->getRawData())) {
+    $display_plugins = $config->get('type_settings.display_plugins');
+    if (!in_array('view_mode:media.original', $display_plugins, TRUE)) {
+      $display_plugins[] = 'view_mode:media.original';
+      $config->set('type_settings.display_plugins', $display_plugins);
+    }
+    $dependencies = $config->get('dependencies.config');
+    if (!in_array('core.entity_view_mode.media.original', $dependencies, TRUE)) {
+      $dependencies[] = 'core.entity_view_mode.media.original';
+      $config->set('dependencies.config', $dependencies);
+    }
+    $config->save(TRUE);
+  }
 }
