@@ -46,7 +46,7 @@ class InteractiveUpload extends FormElement {
     $element['fid'] = [
       '#type' => 'hidden',
     ];
-    $element['upload'] = $element['remove'] = [
+    $element['upload_button'] = $element['remove'] = [
       '#type' => 'submit',
       '#is_button' => TRUE,
       '#limit_validation_errors' => [
@@ -55,8 +55,8 @@ class InteractiveUpload extends FormElement {
       '#weight' => 100,
     ];
 
-    $element['upload']['#value'] = t('Upload');
-    $element['upload']['#submit'][] = [static::class, 'upload'];
+    $element['upload_button']['#value'] = t('Upload');
+    $element['upload_button']['#submit'][] = [static::class, 'upload'];
 
     $element['remove']['#value'] = t('Remove');
     $element['remove']['#submit'][] = [static::class, 'remove'];
@@ -73,7 +73,7 @@ class InteractiveUpload extends FormElement {
         '#theme' => 'file_link',
         '#file' => File::load($fid),
       ];
-      $element['upload']['#access'] = FALSE;
+      $element['upload_button']['#access'] = FALSE;
     }
     else {
       $element['file'] = [
