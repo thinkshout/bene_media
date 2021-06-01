@@ -1,6 +1,5 @@
 name: 'Bene Media File'
 core: 8.x
-core_version_requirement: ^8 || ^9
 type: module
 package: Bene
 description: 'File support for Bene Media.'

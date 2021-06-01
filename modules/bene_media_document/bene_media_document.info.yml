@@ -1,6 +1,5 @@
 name: 'Media Document'
 core: 8.x
-core_version_requirement: ^8 || ^9
 type: module
 description: 'Deprecated: Locally hosted document support for Bene Media. Uninstall this module, it will disappear in future iterations.'
 package: Bene
