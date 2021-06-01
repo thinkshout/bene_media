@@ -1,5 +1,6 @@
 name: 'Bene Media Instagram'
 core: 8.x
+core_version_requirement: ^8 || ^9
 type: module
 description: 'Instagram support for Bene Media.'
 package: Bene
