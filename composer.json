@@ -22,7 +22,7 @@
         "drupal/config_rewrite": "^1.1",
         "drupal/crop": "^2.0",
         "drupal/ctools": "^3.0",
-        "drupal/entity_browser": "^1.10",
+        "drupal/entity_browser": "^2.5",
         "drupal/entity_embed": "^1.1",
         "drupal/inline_entity_form": "^1.0-rc6",
         "drupal/picture_background_formatter": "^1.0",
