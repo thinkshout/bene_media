@@ -7,7 +7,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\bene_media\Element\AjaxUpload;
 use Drupal\bene_media\MediaHelper;
-use Drupal\media_entity\MediaInterface;
+use Drupal\media\MediaInterface;
 
 /**
  * An Entity Browser widget for creating media entities from uploaded files.
@@ -67,7 +67,7 @@ class FileUpload extends EntityFormProxy {
 
     // If the widget context didn't specify any file extension validation, add
     // it as the first validator, allowing it to accept only file extensions
-    // associated with existing media bundles.
+    // associated with existing media types.
     if (empty($validators['file_validate_extensions'])) {
       $bundles = [];
       $entity_browser_info = $form_state->get('entity_browser');
@@ -109,7 +109,7 @@ class FileUpload extends EntityFormProxy {
    * {@inheritdoc}
    */
   public function submit(array &$element, array &$form, FormStateInterface $form_state) {
-    /** @var \Drupal\media_entity\MediaInterface $entity */
+    /** @var \Drupal\media\MediaInterface $entity */
     $entity = $element['entity']['#entity'];
 
     $file = MediaHelper::useFile(
@@ -140,7 +140,7 @@ class FileUpload extends EntityFormProxy {
   public function processUploadElement(array $element, FormStateInterface $form_state) {
     $element = AjaxUpload::process($element, $form_state);
 
-    $element['upload']['#ajax']['callback'] =
+    $element['upload_button']['#ajax']['callback'] =
     $element['remove']['#ajax']['callback'] = [static::class, 'ajax'];
 
     $element['remove']['#value'] = $this->t('Cancel');

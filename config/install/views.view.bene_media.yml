@@ -8,7 +8,7 @@ dependencies:
   module:
     - entity_browser
     - image
-    - media_entity
+    - media
     - taxonomy
     - user
     - views_infinite_scroll
@@ -1237,13 +1237,13 @@ display:
             format: default_summary
           specify_validation: true
           validate:
-            type: 'entity:media_bundle'
+            type: 'entity:media_type'
             fail: ignore
           validate_options:
             operation: view
             multiple: 1
             access: false
-            bundles: null
+            bundles: {  }
           glossary: false
           limit: 0
           case: none

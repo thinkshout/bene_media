@@ -1,30 +1,29 @@
-langcode: en
+angcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_mode.media.embedded
     - field.field.media.video.field_media_video_embed_field
-    - media_entity.bundle.video
+    - image.style.max_650x650
+    - media.type.bene_media_video
   module:
-    - video_embed_field
+    - image
 id: media.video.embedded
 targetEntityType: media
 bundle: video
 mode: embedded
 content:
-  field_media_video_embed_field:
-    type: video_embed_field_video
-    weight: 2
+  thumbnail:
+    type: image
+    weight: 0
     label: hidden
     settings:
-      responsive: true
-      width: 854
-      height: 480
-      autoplay: true
-    third_party_settings: {  }
+      image_style: max_650x650
+      image_link: ''
     region: content
+    third_party_settings: {  }
 hidden:
   created: true
+  field_media_video_embed_field: true
   name: true
-  thumbnail: true
   uid: true

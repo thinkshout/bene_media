@@ -4,7 +4,7 @@ namespace Drupal\bene_media\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity_embed\Form\EntityEmbedDialog as BaseEntityEmbedDialog;
-use Drupal\media_entity\MediaInterface;
+use Drupal\media\MediaInterface;
 
 /**
  * Allow for image embed option.
@@ -24,7 +24,7 @@ class EntityEmbedDialog extends BaseEntityEmbedDialog {
     // Otherwise, if the entity being embedded is a media item, see if its type
     // plugin has a preference regarding which display plugin to use.
     if (empty($input['editor_object']) && $entity instanceof MediaInterface) {
-      $plugin_definition = $entity->getType()->getPluginDefinition();
+      $plugin_definition = $entity->getSource()->getPluginDefinition();
 
       if (isset($plugin_definition['entity_embed_display'])) {
         $element['data-entity-embed-display'] = $plugin_definition['entity_embed_display'];

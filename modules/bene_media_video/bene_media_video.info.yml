@@ -1,8 +1,9 @@
-name: 'Media Video'
+name: 'Bene Media Video'
 core: 8.x
 type: module
 package: Bene
 description: 'Video support for Bene Media.'
 dependencies:
-  - bene_media
-  - video_embed_media
+  - bene_media:bene_media
+  - config_rewrite:config_rewrite
+  - video_embed_field:video_embed_media

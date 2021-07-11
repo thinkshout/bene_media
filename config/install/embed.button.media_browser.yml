@@ -6,7 +6,7 @@ dependencies:
     - core.entity_view_mode.media.embedded_half
   module:
     - entity_embed
-    - media_entity
+    - media
 label: 'Media browser'
 id: media_browser
 type_id: entity

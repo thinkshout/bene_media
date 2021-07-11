@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Support for files as media entities in Bene.
+ */
+
+use Drupal\bene_media\OverrideHelper as Override;
+use Drupal\bene_media_file\Plugin\media\Source\File;
+
+/**
+ * Implements hook_media_source_info_alter().
+ *
+ * @param $sources
+ */
+function bene_media_file_media_source_info_alter(&$sources) {
+  $sources['file']['input_match']['field_types'] = ['file'];
+  Override::pluginClass($sources['file'], File::class);
+}

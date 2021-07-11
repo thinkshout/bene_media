@@ -28,7 +28,8 @@ class EntityReferenceBrowserWidget extends BaseEntityReferenceBrowserWidget {
       ->getFieldStorageDefinition()
       ->getCardinality();
 
-    $element['current']['#theme_wrappers'] = [
+    $theme_wrappers = [];
+    $theme_wrapper_extra_data = [
       'details' => [
         '#attributes' => [
           'open' => TRUE,
@@ -37,6 +38,21 @@ class EntityReferenceBrowserWidget extends BaseEntityReferenceBrowserWidget {
         '#title' => $this->formatPlural($cardinality, 'Current selection', 'Current selections'),
       ],
     ];
+
+    // Add the extra theme wrapper data in all the render elements.
+    foreach ($element['current']['#theme_wrappers'] as $key => $render_element) {
+      // If the render element is already an array then there is no need to make
+      // it an array.
+      if (is_array($render_element)) {
+        $theme_wrappers[$key] = $render_element + $theme_wrapper_extra_data;
+      }
+      // Make this an array if it is not.
+      else {
+        $theme_wrappers[$render_element] = $theme_wrapper_extra_data;
+      }
+    }
+    // Set the modified theme wrapper data.
+    $element['current']['#theme_wrappers'] = $theme_wrappers;
 
     return $element;
   }
