@@ -193,7 +193,8 @@ class MediaHelper {
     $item = static::getSourceField($entity)->first();
 
     $dir = $item->getUploadLocation();
-    $is_ready = file_prepare_directory($dir, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    //$is_ready = file_prepare_directory($dir, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $is_ready = \Drupal::service('file_system')->prepareDirectory($dir, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 
     if ($is_ready) {
       return $dir;
