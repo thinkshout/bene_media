@@ -42,7 +42,7 @@ class BundleEntityStorage extends ConfigEntityStorage {
    */
   public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, EntityAccessControlHandlerInterface $access_handler) {
     parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager, $memory_cache);
-    $this->access_handler = $access_handler;
+    $this->accessHandler = $access_handler;
   }
 
   /**
