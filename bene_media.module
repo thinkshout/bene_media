@@ -5,7 +5,6 @@
  * Core media asset support for Bene.
  */
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -163,7 +162,7 @@ function bene_media_inject_entity_browser_count(array $element) {
  */
 function bene_media_preprocess_image_style(array &$variables) {
   $extension = pathinfo($variables['uri'], PATHINFO_EXTENSION);
-  $extension = Unicode::strtolower($extension);
+  $extension = mb_strtolower($extension);
 
   // If this is an SVG and we don't know its dimensions, try to calculate them
   // through the image style's effect chain.

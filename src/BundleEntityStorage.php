@@ -8,6 +8,7 @@ use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,9 +38,10 @@ class BundleEntityStorage extends ConfigEntityStorage {
    *   The language manager.
    * @param \Drupal\Core\Entity\EntityAccessControlHandlerInterface $access_handler
    *   The access control handler.
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityAccessControlHandlerInterface $access_handler) {
-    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager);
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, EntityAccessControlHandlerInterface $access_handler) {
+    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager, $memory_cache);
     $this->accessHandler = $access_handler;
   }
 
@@ -52,6 +54,7 @@ class BundleEntityStorage extends ConfigEntityStorage {
       $container->get('config.factory'),
       $container->get('uuid'),
       $container->get('language_manager'),
+      $container->get('entity.memory_cache'),
       $container->get('entity_type.manager')->getAccessControlHandler($entity_type->getBundleOf())
     );
   }

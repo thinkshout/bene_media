@@ -4,7 +4,7 @@ namespace Drupal\bene_media;
 
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Helps query and configure various display settings.
@@ -14,9 +14,9 @@ class DisplayHelper {
   /**
    * The entity query factory.
    *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $queryFactory;
+  protected $entity_type_manager;
 
   /**
    * The entity field manager.
@@ -28,13 +28,13 @@ class DisplayHelper {
   /**
    * DisplayHelper constructor.
    *
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
-   *   The entity query factory.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    */
-  public function __construct(QueryFactory $query_factory, EntityFieldManagerInterface $entity_field_manager) {
-    $this->queryFactory = $query_factory;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager) {
+    $this->entity_type_manager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
   }
 
@@ -53,7 +53,7 @@ class DisplayHelper {
    *   it. If there are none, falls back to the default view mode.
    */
   public function getPreferredMode($entity_type, $bundle, array $preferences) {
-    $displays = $this->queryFactory
+    $displays = $this->entity_type_manager
       ->get('entity_view_display')
       ->execute();
 

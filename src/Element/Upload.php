@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\File as FileElement;
 use Drupal\file\Entity\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Drupal\Core\File\FileSystem;
+use Drupal\Core\File\FileSystemInterface;
 
 /**
  * A form element to handle file uploads.
@@ -92,7 +94,7 @@ class Upload extends FileElement {
         ->realPath($element['#upload_location']);
 
       $name = file_munge_filename($upload->getClientOriginalName(), NULL);
-      $name = file_create_filename($name, $destination);
+      $name = \Drupal::service('file_system')->createFilename($name, $destination);
       $name = $upload->move($destination, $name)->getFilename();
 
       $uri = $element['#upload_location'];
