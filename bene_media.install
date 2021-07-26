@@ -304,7 +304,7 @@ function bene_media_update_8209() {
       $config->set('type_settings.display_plugins', $display_plugins);
     }
     $dependencies = $config->get('dependencies.config');
-    if (!in_array('core.entity_view_mode.media.original', $dependencies, TRUE)) {
+    if (!$dependencies || !in_array('core.entity_view_mode.media.original', $dependencies, TRUE)) {
       $dependencies[] = 'core.entity_view_mode.media.original';
       $config->set('dependencies.config', $dependencies);
     }
