@@ -133,14 +133,17 @@ function bene_media_update_8200() {
  */
 function bene_media_update_8201(&$sandbox) {
   if (!isset($sandbox['media_ids'])) {
-    $sandbox['media_ids'] = array_values(\Drupal::entityTypeManager()->getStorage('media')
-      ->getQuery()
-      ->condition('bundle', 'image')
-      ->exists('image')
-      ->notExists('field_media_image')
-      ->execute());
-    $sandbox['max'] = count($sandbox['media_ids']);
-    $sandbox['progress'] = 0;
+    $all_image_fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('media', 'image');
+    if (isset($all_image_fields['image'])) {
+      $sandbox['media_ids'] = array_values(\Drupal::entityTypeManager()->getStorage('media')
+        ->getQuery()
+        ->condition('bundle', 'image')
+        ->exists('image')
+        ->notExists('field_media_image')
+        ->execute());
+      $sandbox['max'] = count($sandbox['media_ids']);
+      $sandbox['progress'] = 0;
+    }
   }
   if (empty($sandbox['media_ids'])) {
     return;
@@ -304,7 +307,7 @@ function bene_media_update_8209() {
       $config->set('type_settings.display_plugins', $display_plugins);
     }
     $dependencies = $config->get('dependencies.config');
-    if (!in_array('core.entity_view_mode.media.original', $dependencies, TRUE)) {
+    if (!$dependencies || !in_array('core.entity_view_mode.media.original', $dependencies, TRUE)) {
       $dependencies[] = 'core.entity_view_mode.media.original';
       $config->set('dependencies.config', $dependencies);
     }
