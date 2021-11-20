@@ -5,15 +5,24 @@ namespace Drupal\bene_media\Form;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\bene_media\MediaHelper as Helper;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\media\MediaForm as BaseMediaForm;
 use Drupal\media\MediaInterface;
 
 /**
  * Adds dynamic preview support to the media entity form.
  */
-class MediaForm extends BaseMediaForm {
+class MediaForm extends BaseMediaForm implements TrustedCallbackInterface {
 
   use BulkCreationEntityFormTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+
+  public static function trustedCallbacks() {
+    return ['renderPreview'];
+  }
 
   /**
    * {@inheritdoc}
