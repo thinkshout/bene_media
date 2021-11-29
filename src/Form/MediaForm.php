@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\bene_media\MediaHelper as Helper;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\media\MediaForm as BaseMediaForm;
 use Drupal\media\MediaInterface;
 
@@ -15,6 +16,14 @@ use Drupal\media\MediaInterface;
 class MediaForm extends BaseMediaForm implements TrustedCallbackInterface {
 
   use BulkCreationEntityFormTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+
+  public static function trustedCallbacks() {
+    return ['renderPreview'];
+  }
 
   /**
    * {@inheritdoc}
