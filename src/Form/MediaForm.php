@@ -6,7 +6,6 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\bene_media\MediaHelper as Helper;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\media\MediaForm as BaseMediaForm;
 use Drupal\media\MediaInterface;
 
