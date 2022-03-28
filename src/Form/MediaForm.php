@@ -143,11 +143,4 @@ class MediaForm extends BaseMediaForm implements TrustedCallbackInterface {
     return Helper::getSourceField($entity)->view('default');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['renderPreview'];
-  }
-
 }
