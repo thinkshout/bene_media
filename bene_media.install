@@ -326,12 +326,12 @@ function bene_media_update_9501() {
 /**
  * Update any media forms using an entity_browser to use media_library with edit.
  */
-function bene_media_update_9502() {
+function bene_media_update_9503() {
   $config_factory = \Drupal::service('config.factory');
   // Find all core.entity_form_display config.
   $all_config = $config_factory->listAll('core.entity_form_display');
   $loaded_config = $config_factory->loadMultiple($all_config);
-  $entity_browsers_to_delete = ['media_browser_modal', 'media_browser'];
+  $entity_browsers_to_delete = ['media_browser_modal', 'media_browser',  'image_browser'];
   foreach ($loaded_config as $name => $config) {
     // Find any config that uses the media_library module.
     if ($config->get('dependencies.module') && in_array('entity_browser', $config->get('dependencies.module'))) {
@@ -341,7 +341,7 @@ function bene_media_update_9502() {
         // Find any references to type: media_library_widget.
         if (isset($field['type']) && $field['type'] == 'entity_browser_entity_reference' && in_array($field['settings']['entity_browser'], $entity_browsers_to_delete)) {
           $field['type'] = 'media_library_widget';
-          $field['settings'] = ['media_types' => '[]'];
+          $field['settings'] = ['media_types' => []];
           // Add the edit button to the widget.
           $field['third_party_settings'] = [
             'media_library_edit' => [
