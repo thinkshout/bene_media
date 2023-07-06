@@ -316,10 +316,14 @@ function bene_media_update_8209() {
 }
 
 /**
- * Prepares a site to uninstall bene_media
+ * Installs modules that can replace bene_media.
  */
 function bene_media_update_9501() {
-  if (\Drupal::moduleHandler()->moduleExists('media_entity_actions')) {
-    \Drupal::service('module_installer')->uninstall(['media_entity_actions']);
+  if (\Drupal::moduleHandler()->moduleExists('media_library')) {
+    \Drupal::service('module_installer')->install(['media_library']);
+  }
+  if (\Drupal::moduleHandler()->moduleExists('media_library_edit')) {
+    \Drupal::service('module_installer')->install(['media_library_edit']);
   }
 }
+
