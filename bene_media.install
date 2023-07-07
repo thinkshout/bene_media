@@ -367,7 +367,7 @@ function bene_media_update_9505() {
 /**
  * Delete all media_browser form modes on media items.
  */
-function bene_media_update_9506() {
+function bene_media_update_9507() {
   $config_factory = \Drupal::service('config.factory');
   // Find all core.entity_form_display config.
   $all_config = $config_factory->listAll('core.entity_form_display');
@@ -383,6 +383,6 @@ function bene_media_update_9506() {
   }
 
   // Delete the core.entity_form_mode.media.media_browser.
-  $editable_config = $config_factory->getEditable('core.entity_form_mode.media.media_browser.');
+  $editable_config = $config_factory->getEditable('core.entity_form_mode.media.media_browser');
   $editable_config->delete();
 }
