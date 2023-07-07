@@ -10,6 +10,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\Entity\Media;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 
 /**
  * Implements hook_install().
@@ -326,7 +327,7 @@ function bene_media_update_9501() {
 /**
  * Update any media forms using an entity_browser to use media_library with edit.
  */
-function bene_media_update_9503() {
+function bene_media_update_9505() {
   $config_factory = \Drupal::service('config.factory');
   // Find all core.entity_form_display config.
   $all_config = $config_factory->listAll('core.entity_form_display');
@@ -354,6 +355,10 @@ function bene_media_update_9503() {
       }
       // Save the config.
       $editable_config->save();
+
+      // Recalculate the entity form's dependencies.
+      $display = EntityFormDisplay::load($editable_config->get('id'));
+      $display->save();
     }
   }
 }
