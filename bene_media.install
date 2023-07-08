@@ -393,20 +393,34 @@ function bene_media_update_9507() {
 function bene_media_update_9508() {
   $config_factory = \Drupal::service('config.factory');
   // Create a new field: field_media_oembed_video.
+  $config = [
+    'config/install/field.storage.media.field_media_oembed_video',
+    'config/install/field.field.media.video.field_media_oembed_video',
+  ];
+  foreach ($config as $name) {
+    if (empty(\Drupal::config($name)->getRawData())) {
+      $yaml = file_get_contents(__DIR__ . '/config/install/' . $name . '.yml');
+      if ($data = Yaml::decode($yaml)) {
+        \Drupal::configFactory()->getEditable($name)
+          ->setData($data)
+          ->save(TRUE);
+      }
+    }
+  }
 
   // For media.type.video, change the source to oembed:video.
-  $editable_config = $config_factory->getEditable('media.type.video');
-  $editable_config->set('source', 'oembed:video');
+  $video_media = $config_factory->getEditable('media.type.video');
+  $video_media->set('source', 'oembed:video');
   $source_configuration = [
     'source_field' => 'field_media_oembed_video',
     'thumbnails_directory' => 'public://video_thumbnails',
     'providers' => [],
   ];
-  $editable_config->set('source_configuration.source_field', $source_configuration);
-  $editable_config->save();
-
+  $video_media->set('source_configuration.source_field', $source_configuration);
+  $video_media->save();
   // Move all values in the old video field to the new video field.
-
+  // INSERT INTO media_revision__field_media_oembed_video SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_media_video_embed_field_value as field_media_oembed_video_value FROM media_revision__field_media_video_embed_field
+  // INSERT INTO media__field_media_oembed_video SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_media_video_embed_field_value as field_media_oembed_video_value FROM media__field_media_video_embed_field
 
   // Update the form and display settings for the video.
 }
