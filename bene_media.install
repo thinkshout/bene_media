@@ -386,3 +386,27 @@ function bene_media_update_9507() {
   $editable_config = $config_factory->getEditable('core.entity_form_mode.media.media_browser');
   $editable_config->delete();
 }
+
+/**
+ * Convert all video_embed_field videos to oembed:video files.
+ */
+function bene_media_update_9508() {
+  $config_factory = \Drupal::service('config.factory');
+  // Create a new field: field_media_oembed_video.
+
+  // For media.type.video, change the source to oembed:video.
+  $editable_config = $config_factory->getEditable('media.type.video');
+  $editable_config->set('source', 'oembed:video');
+  $source_configuration = [
+    'source_field' => 'field_media_oembed_video',
+    'thumbnails_directory' => 'public://video_thumbnails',
+    'providers' => [],
+  ];
+  $editable_config->set('source_configuration.source_field', $source_configuration);
+  $editable_config->save();
+
+  // Move all values in the old video field to the new video field.
+
+
+  // Update the form and display settings for the video.
+}
