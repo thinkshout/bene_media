@@ -7,4 +7,3 @@ dependencies:
   - drupal:system (>=9.2)
   - drupal:media
   - drupal:media_library
-  - media_library_edit
