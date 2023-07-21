@@ -10,7 +10,6 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\Entity\Media;
 use Drupal\Core\Serialization\Yaml;
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
 
 /**
  * Implements hook_install().
