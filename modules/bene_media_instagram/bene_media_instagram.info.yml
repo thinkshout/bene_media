@@ -5,4 +5,3 @@ description: 'Instagram support for Bene Media.'
 package: Bene
 dependencies:
   - bene_media
-  - media_entity_instagram (>=2.0-alpha1)
