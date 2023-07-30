@@ -93,7 +93,8 @@ class Upload extends FileElement {
       $destination = \Drupal::service('file_system')
         ->realPath($element['#upload_location']);
 
-      $name = file_munge_filename($upload->getClientOriginalName(), NULL);
+      $name = new FileUploadSanitizeNameEvent($upload->getClientOriginalName(), NULL);
+      \Drupal::service('event_dispatcher')->dispatch($name);
       $name = \Drupal::service('file_system')->createFilename($name, $destination);
       $name = $upload->move($destination, $name)->getFilename();
 

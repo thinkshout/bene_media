@@ -12,7 +12,9 @@ function bene_media_video_requirements($phase) {
   if ($phase == 'install') {
     $query = \Drupal::entityQuery('media');
     $query->condition('bundle', 'video');
-    $existing_videos = $query->execute();
+    $existing_videos = $query
+      ->accessCheck(FALSE)
+      ->execute();
 
     if ($existing_videos) {
       $requirements['video'] = [
